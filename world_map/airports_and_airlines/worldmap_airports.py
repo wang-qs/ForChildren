@@ -36,6 +36,8 @@ airlines.columns = ["id", "name", "alias", "iata", "icao", "callsign", "country"
 # Read in the routes data.
 routes = pandas.read_csv("routes.csv", header=None, dtype=str)
 routes.columns = ["airline", "airline_id", "source", "source_id", "dest", "dest_id", "codeshare", "stops", "equipment"]
+# This line ensures that we have only numeric data in the airline_id column.
+routes = routes[routes["airline_id"] != "\\N"]
 
 print("======================================")
 print(airports.head())
