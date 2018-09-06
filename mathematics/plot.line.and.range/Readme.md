@@ -23,3 +23,24 @@ But to make my niece and my children to be interesting in computer and programmi
 
 ![py_plot_output_to_show_x.y_range.jpg](https://github.com/wang-qs/ForChildren/raw/master/mathematics/plot.line.and.range/py_plot_output_to_show_x.y_range.jpg)
 
+# The 1st version
+
+pyplot_xy.py is the 1st version. And the quadrangle in yellow is highlighted by the following hard code.
+
+> verts = [(-0.5, -1.5)] +  [(2, 1)] +  [(3.5, -0.5)] +  [(1, -3)]
+
+# The 2nd version
+
+To move one more step, whether we could highlight the  quadrangle automatically? ( The point is to calculate the crossing point of the 4 lines automatically, and then we will know the range to highlight. )
+
+This is the idea of the 2nd version, and it is implemented by pyplot_xy_v2.py
+
+> a = np.array([input_info[0][1:3], input_info[1][1:3]])
+> b = np.array([input_info[0, group1_index], input_info[1, group2_index]])
+> x = np.linalg.solve(a, b)
+
+And now, if the question changes, we only need to change the following "input" in the code, and then everything will be calculated automatically.
+
+> # If ..... -2 < x + y < 3, and 1 < x - y < 4
+> input = np.array([[-2, 1, 1, 3], [1, 1, -1, 4]])
+
