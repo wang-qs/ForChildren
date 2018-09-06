@@ -41,6 +41,6 @@ This is the idea of the 2nd version, and it is implemented by pyplot_xy_v2.py
 
 And now, if the question changes, we only need to change the following "input" in the code, and then everything will be calculated automatically.
 
-> # If ..... -2 < x + y < 3, and 1 < x - y < 4
+> \# If ..... -2 < x + y < 3, and 1 < x - y < 4
 > input = np.array([[-2, 1, 1, 3], [1, 1, -1, 4]])
 
