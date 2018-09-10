@@ -39,13 +39,28 @@ def get_root(input_array, group1_index, group2_index):
     return x
 
 
-if __name__ == '__main__':
-    """
-    Now every we need to do is just changing the input. And then everything will be calculated based on it.  
-    """
-    # If ..... -2 < x + y < 3, and 1 < x - y < 4
-    input_array = np.array([[-2, 1, 1, 3], [1, 1, -1, 4]])
+def get_min_and_max_for_target(input_array, target_array):
+    input_for_solve = np.array([[input_array[0][1], input_array[1][1]], [input_array[0][2], input_array[1][2]]])
+    target_root = np.linalg.solve(input_for_solve, target_array)
+    # print(target_root)
 
+    min1 = input_array[0][0]
+    max1 = input_array[0][3]
+    min2 = input_array[1][0]
+    max2 = input_array[1][3]
+    if target_array[0] < 0:
+        min1, max1 = max1, min1
+    if target_array[1] < 0:
+        min1, max1 = max1, min1
+
+    result_min = 1.0 * target_root[0] * min1 + 1.0 * target_root[1] * min2
+    result_max = 1.0 * target_root[0] * max1 + 1.0 * target_root[1] * max2
+    if result_min > result_max:
+        result_min, result_max = result_max, result_min
+    return result_min, result_max
+
+
+def solve_and_visualize_result(input_array, target_array):
     ax = plt.subplot()
     move_axis_to_middle(ax)
 
@@ -85,4 +100,20 @@ if __name__ == '__main__':
     plt.ylim(-10, 10)
     ax = plt.gca()
 
+    result_min, result_max = get_min_and_max_for_target(input_array, target_array)
+    output = str(result_min) + " < " + str(target_array[0]) + "x + " + str(target_array[1]) + "y < " + str(result_max)
+    # https: // matplotlib.org / users / text_intro.html
+    ax.text(1, 9, output, style='italic', bbox={'facecolor': 'red', 'alpha': 0.5, 'pad': 10})
+
     plt.show()
+
+
+if __name__ == '__main__':
+    # If ..... -2 < x + y < 3, and 1 < x - y < 4
+    input_array = np.array([[-2, 1, 1, 3], [1, 1, -1, 4]])
+
+    # Our target: What is the range of z = 2x - 3y ?
+    target_array = np.array([2, -3])
+
+    # Solve this problem and visualize the result.
+    solve_and_visualize_result(input_array, target_array)

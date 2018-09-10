@@ -44,3 +44,8 @@ And now, if the question changes, we only need to change the following "input" i
 > \# If ..... -2 < x + y < 3, and 1 < x - y < 4 <br />
 > input = np.array([[-2, 1, 1, 3], [1, 1, -1, 4]])
 
+# The 3rd version
+
+At last, whether we could ask computer to tell us the answer directly ( the range of "z = 2x - 3y") ? This is what the 3rd version does. It will move one more step and show the final answer directly as the following picture.
+
+![final_output.jpg](https://github.com/wang-qs/ForChildren/raw/master/mathematics/plot.line.and.range/final_output.jpg)
