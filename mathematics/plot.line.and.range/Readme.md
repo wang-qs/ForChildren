@@ -21,7 +21,7 @@ To better understand the restrictions and the possible values of x and y. It is 
 
 But to make my niece and my children to be interesting in computer and programming, why not visulize it by program?  This is why I creted this python script, and the following picture is the final output.
 
-![py_plot_output_to_show_x.y_range.jpg](https://github.com/wang-qs/ForChildren/raw/master/mathematics/plot.line.and.range/py_plot_output_to_show_x.y_range.jpg = 642x588)
+![py_plot_output_to_show_x.y_range.jpg](https://github.com/wang-qs/ForChildren/raw/master/mathematics/plot.line.and.range/py_plot_output_to_show_x.y_range.jpg){:height="642px" width="588px"}
 
 # The 1st version
 
