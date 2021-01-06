@@ -41,7 +41,7 @@ def set_margin(section):
     section.left_margin = Inches(0.5)
     section.right_margin = Inches(0.5)
 
-def pgn_to_docx(pgn_filename, workspace, svg_size=800, svg_stype=None):
+def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=False):
     temp_svg_file = "chess_pgn_to_docx_temp_svg.svg"
     temp_png_file = "chess_pgn_to_docx_temp_svg.png"
 
@@ -62,6 +62,7 @@ def pgn_to_docx(pgn_filename, workspace, svg_size=800, svg_stype=None):
     idx = 0
 
     while last_node.variations:
+        # TODO: for variations.
         idx = idx + 1
         last_node = last_node.variations[0]
         comment_map[idx] = last_node.comment
@@ -81,7 +82,7 @@ def pgn_to_docx(pgn_filename, workspace, svg_size=800, svg_stype=None):
     white = True
     for move in first_game.mainline_moves():
         board.push(move)
-        current_svg = chess.svg.board(board=board, lastmove=move, size=svg_size, style=svg_stype)
+        current_svg = chess.svg.board(board=board, lastmove=move, flipped=flipped, size=400, style=svg_style)
 
         turn = ""
         old_index = index
@@ -126,7 +127,7 @@ def pgn_to_docx(pgn_filename, workspace, svg_size=800, svg_stype=None):
 
     print("Final status of this PGN file.")
     print(board)
-    document.save('chess.docx')
+    document.save(docx_filename)
 
     os.remove(temp_svg_file)
     os.remove(temp_png_file)
@@ -134,6 +135,8 @@ def pgn_to_docx(pgn_filename, workspace, svg_size=800, svg_stype=None):
 if __name__ == '__main__':
     workspace = "./"
     pgn_filename = "B33-42.pgn"
+    docx_filename = pgn_filename.replace(".pgn","") + ".docx"
 
-    #pgn_to_md(pgn_filename, workspace, svg_stype=style_black_and_white)
-    pgn_to_docx(pgn_filename, workspace, svg_stype=style_mono_print)
+    #pgn_to_md(pgn_filename, workspace, svg_style=style_black_and_white)
+    #pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print)
+    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=True)
