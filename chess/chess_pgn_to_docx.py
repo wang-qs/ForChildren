@@ -120,7 +120,7 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
         with open(workspace + temp_svg_file, 'r') as content_file:
             content = content_file.read()
             svg2png(bytestring=content, write_to=temp_png_file)
-        document.add_picture(temp_png_file, width=Inches(2.2))
+        document.add_picture(temp_png_file, width=Inches(2)) # TODO: to show 4(row) * 3(column) boards, 2.2 is the max size.
         if comment:
             document.add_paragraph(turn + " Comment: " + comment )
 
@@ -133,8 +133,9 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
     os.remove(temp_png_file)
 
 if __name__ == '__main__':
+
+    pgn_filename = "B33-07.pgn"
     workspace = "./"
-    pgn_filename = "B33-42.pgn"
     docx_filename = pgn_filename.replace(".pgn","") + ".docx"
 
     #pgn_to_md(pgn_filename, workspace, svg_style=style_black_and_white)
