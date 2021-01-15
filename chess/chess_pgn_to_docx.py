@@ -32,6 +32,9 @@ def set_number_of_columns(section, cols):
     # # https://github.com/python-openxml/python-docx/issues/167
     WNS_COLS_NUM = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}num"
     section._sectPr.xpath("./w:cols")[0].set(WNS_COLS_NUM, str(cols))
+    # The 'sep' option is similar with 'num'.
+    WNS_COLS_SEP = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}sep"
+    section._sectPr.xpath("./w:cols")[0].set(WNS_COLS_SEP, "1")
 
 def set_margin(section):
     # changing the page margins => https://stackoverflow.com/questions/32914595/modify-docx-page-margins-with-python-docx
@@ -134,10 +137,10 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
 
 if __name__ == '__main__':
 
-    pgn_filename = "B33-07.pgn"
+    pgn_filename = "test_doc.pgn"
+    flipped = False
+
     workspace = "./"
     docx_filename = pgn_filename.replace(".pgn","") + ".docx"
 
-    #pgn_to_md(pgn_filename, workspace, svg_style=style_black_and_white)
-    #pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print)
-    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=True)
+    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=flipped)
