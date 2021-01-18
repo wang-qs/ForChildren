@@ -73,6 +73,13 @@ def write_board_screenshot(document, board_in_svg):
 def write_title(document, title):
     document.add_heading(title, 0)
 
+def is_white_move(step, first_move_white):
+    # If it is a game started from the beginning, the steps 1,3,5 are white.
+    if step % 2 == 1:
+        return first_move_white
+    else:
+        return not first_move_white
+
 def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=False, show_initial_board=False, first_move_white=True):
     document = Document()
     update_docx_setting(document)
@@ -109,7 +116,7 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
         write_board_screenshot(document, board_in_svg)
 
     index = 1
-    white = True
+    white = is_white_move(1, first_move_white) # set to the initial value of the first move.
     step = 0
     for move in first_game.mainline_moves():
         step+=1
@@ -128,28 +135,20 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
             white = True # change it for next loop
             index += 1
 
-        # update the docx file.
+        # write a line number item (e.g. "1. e4, e5") if it is a white move, or it is the first move.
         if old_white or (step == 1 and (not first_move_white)):
-            # the branch that we should write a list number item. e.g. "1. e4, e5"
             if step == 1 and (not first_move_white):
-                first_step = san_map[old_index*2 -1]
+                first_step = san_map[step]
                 write_list_number(document, "... , " + first_step)
             else:
-                write_step = san_map[old_index*2 -1]
-                blank_step = "-"
-                if old_index * 2 in san_map:
-                    blank_step = san_map[old_index * 2]
+                write_step = san_map[step]
+                blank_step = san_map[step + 1] if step + 1 in san_map else  "-"
                 write_list_number(document, write_step + ", " + blank_step)
-            comment = comment_map[old_index*2 -1]
-        else:
-            if old_index * 2 in comment_map:
-                comment = comment_map[old_index * 2]
-            else:
-                comment = ""
 
+        # write the board screenshot and its comment if any.
         write_board_screenshot(document, board_in_svg)
-        if comment:
-            document.add_paragraph(turn + " Comment: " + comment )
+        if comment_map[step]:
+            document.add_paragraph(turn + " Comment: " + comment_map[step])
 
 
     print("Final status of this PGN file.")
@@ -160,11 +159,13 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
 
 if __name__ == '__main__':
 
-    pgn_filename = "test_doc.pgn"
+    pgn_filename = "test_pgn_first_move_is_white.pgn"
+
     flipped = False
     show_initial_board = True
+    first_move_white = True
 
     workspace = "./"
     docx_filename = pgn_filename.replace(".pgn","") + ".docx"
 
-    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=flipped, show_initial_board=True)
+    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=flipped, show_initial_board=True, first_move_white=first_move_white)
