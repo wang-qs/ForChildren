@@ -73,6 +73,9 @@ def write_board_screenshot(document, board_in_svg):
 def write_title(document, title):
     document.add_heading(title, 0)
 
+def add_paragraph(document, paragraph):
+    document.add_paragraph(paragraph)
+
 def is_white_move(step, first_move_white):
     # If it is a game started from the beginning, the steps 1,3,5 are white.
     if step % 2 == 1:
@@ -115,28 +118,16 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
         board_in_svg = chess.svg.board(board=board, flipped=flipped, size=400, style=svg_style)
         write_board_screenshot(document, board_in_svg)
 
-    index = 1
-    white = is_white_move(1, first_move_white) # set to the initial value of the first move.
     step = 0
+    group_step = 0
     for move in first_game.mainline_moves():
         step+=1
         board.push(move)
         board_in_svg = chess.svg.board(board=board, lastmove=move, flipped=flipped, size=400, style=svg_style)
 
-        turn = ""
-        old_index = index
-        old_white = white
-
-        if white:
-            turn = "White"
-            white = False # change it for next loop
-        else:
-            turn = "Black"
-            white = True # change it for next loop
-            index += 1
-
         # write a line number item (e.g. "1. e4, e5") if it is a white move, or it is the first move.
-        if old_white or (step == 1 and (not first_move_white)):
+        if is_white_move(step, first_move_white) or (step == 1 and (not first_move_white)):
+            group_step += 1 # one move of the white and one more of black is a group. This is just the number in pgn file.
             if step == 1 and (not first_move_white):
                 first_step = san_map[step]
                 write_list_number(document, "... , " + first_step)
@@ -148,7 +139,8 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
         # write the board screenshot and its comment if any.
         write_board_screenshot(document, board_in_svg)
         if comment_map[step]:
-            document.add_paragraph(turn + " Comment: " + comment_map[step])
+            turn = "White" if is_white_move(step, first_move_white) else "Black"
+            add_paragraph(document, turn + " Comment: " + comment_map[step])
 
 
     print("Final status of this PGN file.")
