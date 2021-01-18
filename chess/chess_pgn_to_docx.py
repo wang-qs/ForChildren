@@ -44,7 +44,7 @@ def set_margin(section):
     section.left_margin = Inches(0.5)
     section.right_margin = Inches(0.5)
 
-def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=False):
+def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=False, show_initial_board=False):
     temp_svg_file = "chess_pgn_to_docx_temp_svg.svg"
     temp_png_file = "chess_pgn_to_docx_temp_svg.png"
 
@@ -81,6 +81,19 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
 
 
     board = first_game.board()
+    if show_initial_board:
+        current_svg = chess.svg.board(board=board, flipped=flipped, size=400, style=svg_style)
+        # create svg file.
+        f = open(workspace + temp_svg_file, "w")
+        f.write(current_svg)
+        f.close()
+        with open(workspace + temp_svg_file, 'r') as content_file:
+            content = content_file.read()
+            svg2png(bytestring=content, write_to=temp_png_file)
+        p = document.add_paragraph("", style='List Number')
+        p.add_run("Initial Board").bold = True
+        document.add_picture(temp_png_file, width=Inches(2))  # TODO: to show 4(row) * 3(column) boards, 2.2 is the max size.
+
     index = 1
     white = True
     for move in first_game.mainline_moves():
@@ -137,10 +150,11 @@ def pgn_to_docx(workspace, pgn_filename, docx_filename,svg_style=None, flipped=F
 
 if __name__ == '__main__':
 
-    pgn_filename = "test_doc.pgn"
+    pgn_filename = "test.pgn"
     flipped = False
+    show_initial_board = True
 
     workspace = "./"
     docx_filename = pgn_filename.replace(".pgn","") + ".docx"
 
-    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=flipped)
+    pgn_to_docx(workspace, pgn_filename, docx_filename, svg_style=style_mono_print, flipped=flipped, show_initial_board=True)
